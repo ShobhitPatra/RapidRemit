@@ -9,27 +9,6 @@ const { SECRET_KEY } = require("../config");
 const router = express.Router();
 
 router.post("/signup", async (req, res) => {
-  // const userDets = req.body;
-  // if (!userValidatationSchema.success) {
-  //   res.status(411).json({
-  //     msg: "invaid inputs",
-  //   });
-  // } else {
-  //   if (
-  //     await User.findOne({
-  //       username: userDets.username,
-  //     })
-  //   ) {
-  //     res.status(411).json({
-  //       msg: "already an existing user",
-  //     });
-  //   } else {
-  //     const token = await jwt.sign(userDets.username, SECRET_KEY);
-  //     res.json({
-  //       token,
-  //     });
-  //   }
-  // }
   const userDets = req.body;
   const success = signupSchema.safeParse(userDets);
   if (!success) {
@@ -54,6 +33,25 @@ router.post("/signup", async (req, res) => {
     msg: "user created successfully",
     token,
   });
+});
+
+router.post("/signin", async (req, res) => {
+  const userDets = req.body;
+  const user = await User.findOne({
+    username: userDets.username,
+    password: userDets.password,
+  });
+  const userId = user._id;
+  const token = jwt.sign({ userId, SECRET_KEY });
+  if (user) {
+    res.status(200).json({
+      token,
+    });
+  } else {
+    res.status(411).json({
+      msg: "invalid credentials",
+    });
+  }
 });
 
 module.exports = router;
