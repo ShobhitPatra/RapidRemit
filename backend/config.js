@@ -2,4 +2,4 @@
 
 const SECRET_KEY = "habludablu";
 
-module.exports = SECRET_KEY;
+module.exports = { SECRET_KEY };
