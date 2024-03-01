@@ -10,8 +10,8 @@ const router = express.Router();
 
 router.post("/signup", async (req, res) => {
   const userDets = req.body;
-  const success = signupSchema.safeParse(userDets);
-  if (!success) {
+  const parsedUser = signupSchema.safeParse(userDets);
+  if (!parsedUser.success) {
     res.status(411).json({
       msg: "invalid input",
     });
