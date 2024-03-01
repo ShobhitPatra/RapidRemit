@@ -19,3 +19,7 @@ const authMiddleware = (res, req, next) => {
     });
   }
 };
+
+module.exports = {
+  authMiddleware,
+};

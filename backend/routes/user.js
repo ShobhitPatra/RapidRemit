@@ -6,9 +6,10 @@ const {
 const { User } = require("../db");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", authMiddleware, async (req, res) => {
   const userDets = req.body;
   const parsedUser = signupSchema.safeParse(userDets);
   if (!parsedUser.success) {
@@ -50,6 +51,30 @@ router.post("/signin", async (req, res) => {
   } else {
     res.status(411).json({
       msg: "invalid credentials",
+    });
+  }
+});
+
+router.put("/", authMiddleware, async (req, res) => {
+  const updatedDets = req.body;
+  const password = updatedDets.password;
+  const firstName = updatedDets.firstName;
+  const lastName = updatedDets.lastName;
+
+  const parsedResult = signupSchema.safeParse(updatedDets);
+
+  if (parsedResult.success) {
+    await User.updateOne({
+      firstName,
+      lastName,
+      password,
+    });
+    res.status(200).json({
+      msg: "user details updated",
+    });
+  } else {
+    res.status(411).json({
+      msg: "password too small",
     });
   }
 });
