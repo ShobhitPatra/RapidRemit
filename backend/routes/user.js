@@ -74,4 +74,31 @@ router.put("/", authMiddleware, async (req, res) => {
   });
 });
 
+router.get("/bulk", async (req, res) => {
+  const filter = req.query.filter || "";
+  const filteredUsers = await User.find({
+    $or: [
+      {
+        firstname: {
+          $regex: filter,
+        },
+      },
+      {
+        lastname: {
+          $regex: filter,
+        },
+      },
+    ],
+  });
+
+  res.json({
+    users: filteredUsers.map((e) => {
+      username: e.username;
+      firstname: e.firstname;
+      lastname: e.lastname;
+      _id: e._id;
+    }),
+  });
+});
+
 module.exports = router;
