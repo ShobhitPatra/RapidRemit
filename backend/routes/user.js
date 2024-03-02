@@ -4,7 +4,7 @@ const {
   signupSchema,
   updateSchema,
 } = require("../validationSchemas");
-const { User } = require("../db");
+const { User, Accounts } = require("../db");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("../config");
 const { authMiddleware } = require("../middlewares/authMiddleware");
@@ -12,8 +12,8 @@ const router = express.Router();
 
 router.post("/signup", authMiddleware, async (req, res) => {
   const userDets = req.body;
-  const parsedUser = signupSchema.safeParse(userDets);
-  if (!parsedUser.success) {
+  const { success } = signupSchema.safeParse(userDets);
+  if (!success) {
     res.status(411).json({
       msg: "invalid input",
     });
@@ -28,8 +28,16 @@ router.post("/signup", authMiddleware, async (req, res) => {
       msg: "username already exists",
     });
   }
-
-  const newUser = await User.create(userDets);
+  const balance = Math.floor(Math.random() * 10000 + 1);
+  const newUser = await User.create({
+    username: userDets.username,
+    password: userDets.password,
+    firstname: userDets.firstname,
+    lastname: userDets.lastname,
+  });
+  await Accounts.create({
+    balance,
+  });
   const token = jwt.sign({ userId: newUser._id }, SECRET_KEY);
   res.status(200).json({
     msg: "user created successfully",

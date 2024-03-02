@@ -32,18 +32,21 @@ const userSchema = new Schema({
     required: true,
   },
   balance: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Accounts",
   },
 });
 
 const accountSchema = new Schema({
   user: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types,
+    ObjectId,
     ref: "User",
+    required: true,
   },
   balance: {
-    type: Float32Array,
+    type: Number,
+    required: true,
   },
 });
 
