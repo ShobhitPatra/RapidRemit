@@ -2,6 +2,7 @@ const express = require("express");
 const {
   userValidatationSchema,
   signupSchema,
+  updateSchema,
 } = require("../validationSchemas");
 const { User } = require("../db");
 const jwt = require("jsonwebtoken");
@@ -56,27 +57,21 @@ router.post("/signin", async (req, res) => {
 });
 
 router.put("/", authMiddleware, async (req, res) => {
-  const updatedDets = req.body;
-  const password = updatedDets.password;
-  const firstName = updatedDets.firstName;
-  const lastName = updatedDets.lastName;
+  const { success } = updateSchema.safeParse(req.body);
 
-  const parsedResult = signupSchema.safeParse(updatedDets);
-
-  if (parsedResult.success) {
-    await User.updateOne({
-      firstName,
-      lastName,
-      password,
-    });
-    res.status(200).json({
-      msg: "user details updated",
-    });
-  } else {
+  if (!success) {
     res.status(411).json({
-      msg: "password too small",
+      msg: "password length not apt",
     });
   }
+
+  await User.updateOne({
+    id: req.userId,
+  });
+
+  res.status(200).json({
+    msg: "updated successfully",
+  });
 });
 
 module.exports = router;
