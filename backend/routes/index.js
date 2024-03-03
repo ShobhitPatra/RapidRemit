@@ -4,4 +4,4 @@ const userRoute = require("./user");
 const accountRouter = require("./account");
 router.use("/user", userRoute);
 router.use("/account", accountRouter);
-module.exports = { router };
+module.exports = router;
