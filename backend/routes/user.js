@@ -1,112 +1,119 @@
 const express = require("express");
-const {
-  userValidatationSchema,
-  signupSchema,
-  updateSchema,
-} = require("../validationSchemas");
-const { User, Accounts } = require("../db");
+const signupSchema = require("../validation/signupSchema");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { SECRET_KEY } = require("../config");
-const { authMiddleware } = require("../middlewares/authMiddleware");
+const { User, Acccount } = require("../db");
+const JWT_SECRET = require("../config");
+const updateSchema = require("../validation/updateSchema");
+const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
+module.exports = router;
 
-router.post("/signup", authMiddleware, async (req, res) => {
-  const userDets = req.body;
-  const { success } = signupSchema.safeParse(userDets);
+router.post("/signup", async (req, res) => {
+  const { username, firstname, lastname, password } = req.body;
+  const { success } = signupSchema.safeParse(req.body);
   if (!success) {
-    res.status(411).json({
-      msg: "invalid input",
+    res.status(400).json({
+      msg: "invalid inputs",
     });
   }
-
-  const user = await User.findOne({
-    username: userDets.username,
+  const existingUser = await User.findOne({
+    username: req.body.username,
   });
 
-  if (user._id) {
-    res.status(411).json({
+  if (existingUser) {
+    res.status(400).json({
       msg: "username already exists",
     });
   }
-  const balance = Math.floor(Math.random() * 10000 + 1);
+  const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = await User.create({
-    username: userDets.username,
-    password: userDets.password,
-    firstname: userDets.firstname,
-    lastname: userDets.lastname,
+    username,
+    firstname,
+    lastname,
+    password: hashedPassword,
   });
-  await Accounts.create({
-    balance,
+  const initialBalance = Math.random() * 10000 + 1;
+  const newAccount = await Acccount.create({
+    userId: newUser._id,
+    balance: initialBalance,
   });
-  const token = jwt.sign({ userId: newUser._id }, SECRET_KEY);
-  res.status(200).json({
-    msg: "user created successfully",
-    token,
-  });
-});
+  const token = jwt.sign({ userId: newUser._id }, JWT_SECRET);
 
-router.post("/signin", async (req, res) => {
-  const userDets = req.body;
-  const user = await User.findOne({
-    username: userDets.username,
-    password: userDets.password,
+  res.status(200).json({
+    msg: "new user successfully registed",
+    token,
+    newUser,
+    balance: newAccount.balance,
   });
-  const userId = user._id;
-  const token = jwt.sign({ userId, SECRET_KEY });
-  if (user) {
-    res.status(200).json({
-      token,
-    });
-  } else {
-    res.status(411).json({
-      msg: "invalid credentials",
-    });
-  }
 });
 
 router.put("/", authMiddleware, async (req, res) => {
   const { success } = updateSchema.safeParse(req.body);
-
+  const { firstname, lastname, password } = req.body;
   if (!success) {
-    res.status(411).json({
-      msg: "password length not apt",
+    res.status(400).json({
+      msg: "invalid input ",
     });
   }
 
-  await User.updateOne({
-    id: req.userId,
-  });
+  const updatedUser = {};
+
+  if (firstname) {
+    updatedUser.firstname = firstname;
+  }
+  if (lastname) {
+    updatedUser.lastname = lastname;
+  }
+  if (password) {
+    updatedUser.password = password;
+  }
+  await User.updateOne(
+    {
+      _id: req.userId,
+    },
+    {
+      $set: {
+        firstname: updatedUser.firstname,
+        lastname: updatedUser.lastname,
+        password: updatedUser.password,
+      },
+    }
+  );
 
   res.status(200).json({
-    msg: "updated successfully",
+    msg: "user credentials updated",
+    updaetdTo: updatedUser,
   });
 });
 
 router.get("/bulk", async (req, res) => {
-  const filter = req.query.filter || "";
-  const filteredUsers = await User.find({
+  const { filter } = req.query;
+  if (!filter) {
+    res.json({
+      msg: "empty ",
+    });
+  }
+
+  const fillteredUsers = await User.find({
     $or: [
       {
-        firstname: {
-          $regex: filter,
+        $regex: {
+          firstname: filter,
         },
       },
       {
-        lastname: {
-          $regex: filter,
+        $regex: {
+          lastname: filter,
         },
       },
     ],
   });
-
   res.json({
-    users: filteredUsers.map((e) => {
-      username: e.username;
-      firstname: e.firstname;
-      lastname: e.lastname;
-      _id: e._id;
-    }),
+    user: fillteredUsers.map((e) => ({
+      username: e.username,
+      firstname: e.firstname,
+      lastname: e.lastname,
+    })),
   });
 });
-
-module.exports = router;

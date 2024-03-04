@@ -1,68 +1,56 @@
 const express = require("express");
-const { authMiddleware } = require("../middlewares/authMiddleware");
-const { Account } = require("../db");
-const { default: mongoose } = require("mongoose");
-const { AuthMechanism } = require("mongodb");
+const { Acccount } = require("../db");
 const router = express.Router();
+const authMiddleware = require("../middlewares/authMiddleware");
 
-router.get("/balance", authMiddleware, async (res, req) => {
-  const targetAccount = await Account.findOne({
-    userId: req.body.userId,
+router.get("/balance", authMiddleware, async (req, res) => {
+  const account = await Acccount.findOne({
+    userId: req.userId,
   });
-  const balance = targetAccount.balance;
-  res.status(200).json({
-    balance,
+
+  res.json({
+    balance: account.balance,
   });
 });
 
 router.post("/transfer", authMiddleware, async (req, res) => {
-  const session = mongoose.startSession();
+  const session = await mongoose.startSession();
+
   session.startTransaction();
   const { amount, to } = req.body;
 
-  const account = Account.findOne({
-    userId: req.userId,
-  }).session(session);
+  // Fetch the accounts within the transaction
+  const account = await Account.findOne({ userId: req.userId }).session(
+    session
+  );
 
   if (!account || account.balance < amount) {
     await session.abortTransaction();
     return res.status(400).json({
-      msg: "insufficient balance",
+      message: "Insufficient balance",
     });
   }
 
-  const toAccount = await Account.findOne({
-    userId: to,
-  }).session(session);
+  const toAccount = await Account.findOne({ userId: to }).session(session);
 
   if (!toAccount) {
     await session.abortTransaction();
-    res.status(400).json({
-      msg: "no such account exists",
+    return res.status(400).json({
+      message: "Invalid account",
     });
   }
 
+  // Perform the transfer
   await Account.updateOne(
-    {
-      userId: req.userId,
-    },
-    {
-      $inc: {
-        balance: -amount,
-      },
-    }
-  );
+    { userId: req.userId },
+    { $inc: { balance: -amount } }
+  ).session(session);
+  await Account.updateOne(
+    { userId: to },
+    { $inc: { balance: amount } }
+  ).session(session);
 
-  await Account.updateOne(
-    {
-      userId: to,
-    },
-    {
-      $inc: {
-        balance: amount,
-      },
-    }
-  );
+  // Commit the transaction
   await session.commitTransaction();
 
   res.json({

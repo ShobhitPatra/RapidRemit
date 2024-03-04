@@ -1,36 +1,27 @@
 const mongoose = require("mongoose");
-// const { Schema } = require("zod");
-
 mongoose.connect(
-  "mongodb+srv://shobhit9999999:manikchacha@cluster0.jznhiz5.mongodb.net/wallet_app"
+  "mongodb+srv://shobhit9999999:manikchacha@cluster0.jznhiz5.mongodb.net/test_app"
 );
-
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
     unique: true,
     trim: true,
-    lowercase: true,
-    minLength: 3,
-    maxLength: 30,
+    lowerCase: true,
+  },
+  firstname: {
+    type: String,
+    required: true,
+  },
+  lastname: {
+    type: String,
+    required: true,
   },
   password: {
     type: String,
     required: true,
     minLength: 8,
-  },
-  firstName: {
-    type: String,
-    required: true,
-    trim: true,
-    maxLength: 50,
-  },
-  lastName: {
-    type: String,
-    required: true,
-    trim: true,
-    maxLength: 50,
   },
 });
 
@@ -42,13 +33,12 @@ const accountSchema = new mongoose.Schema({
   },
   balance: {
     type: Number,
-    required: true,
   },
 });
 
 const User = mongoose.model("User", userSchema);
-const Account = mongoose.model("Account", accountSchema);
+const Acccount = mongoose.model("Account", accountSchema);
 module.exports = {
   User,
-  Account,
+  Acccount,
 };
