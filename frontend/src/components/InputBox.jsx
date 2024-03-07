@@ -1,6 +1,6 @@
 import React from "react";
 
-function InputBox({ inputLabel = "inputLabel", inputType = "text" }) {
+function InputBox({ inputLabel = "inputLabel", inputType = "text", onChange }) {
   return (
     <>
       <div
@@ -15,6 +15,7 @@ function InputBox({ inputLabel = "inputLabel", inputType = "text" }) {
         </div>
         <div id="input-feild" className="  xl:py-2 sm:py-1">
           <input
+            onChange={onChange}
             type={inputType}
             className="rounded-md xl:p-2 sm:p-1 bg-slate-600 text-slate-50 w-full"
           ></input>
