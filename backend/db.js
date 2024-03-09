@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 mongoose.connect(
   "mongodb+srv://shobhit9999999:manikchacha@cluster0.jznhiz5.mongodb.net/test_app"
 );
+
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -37,8 +38,8 @@ const accountSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model("User", userSchema);
-const Acccount = mongoose.model("Account", accountSchema);
+const Account = mongoose.model("Account", accountSchema);
 module.exports = {
   User,
-  Acccount,
+  Account,
 };

@@ -4,11 +4,12 @@ import SubHeading from "../components/SubHeading";
 import InputBox from "../components/InputBox";
 import Button from "../components/Button";
 import BottomWarning from "../components/BottomWarning";
+import axios from "axios";
 
 export default function Signup() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   return (
@@ -34,7 +35,7 @@ export default function Signup() {
           />
           <InputBox
             onChange={(e) => {
-              setEmail(e.target.value);
+              setUsername(e.target.value);
             }}
             inputLabel="Email"
           />
@@ -44,7 +45,17 @@ export default function Signup() {
             }}
             inputLabel="Password"
           />
-          <Button btnText="Sign up" />
+          <Button
+            btnText="Sign up"
+            onClick={async () => {
+              await axios.post("http://localhost:3000/api/v1/user/signup", {
+                firstname,
+                lastname,
+                username,
+                password,
+              });
+            }}
+          />
           <BottomWarning textHere="Existing User ? Click Here" />
         </div>
       </div>

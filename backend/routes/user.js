@@ -2,7 +2,7 @@ const express = require("express");
 const signupSchema = require("../validation/signupSchema");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { User, Acccount } = require("../db");
+const { User, Account } = require("../db");
 const JWT_SECRET = require("../config");
 const updateSchema = require("../validation/updateSchema");
 const authMiddleware = require("../middlewares/authMiddleware");
@@ -34,7 +34,7 @@ router.post("/signup", async (req, res) => {
     password: hashedPassword,
   });
   const initialBalance = Math.random() * 10000 + 1;
-  const newAccount = await Acccount.create({
+  const newAccount = await Account.create({
     userId: newUser._id,
     balance: initialBalance,
   });
