@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Button from "./Button";
 import axios from "axios";
+import EachUser from "./EachUser";
 
 export default function Users() {
   const [filter, setFilter] = useState("");
@@ -29,7 +30,11 @@ export default function Users() {
             }}
           ></input>
         </div>
-        <div id="filtered-users"></div>
+        <div id="filtered-users">
+          <EachUser />
+          <EachUser />
+          <EachUser />
+        </div>
       </div>
     </>
   );
