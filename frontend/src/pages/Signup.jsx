@@ -54,6 +54,7 @@ export default function Signup() {
                 username,
                 password,
               });
+              localStorage.setItem("token", token);
             }}
           />
           <BottomWarning textHere="Existing User ? Click Here" />
