@@ -2,6 +2,7 @@ import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { loginSchema, signupSchema } from "../zod/schemas.js";
 import { generateToken } from "../utils/generateToken.js";
+import { Account } from "../models/account.model.js";
 
 export const signup = async (req, res) => {
   try {
@@ -33,11 +34,17 @@ export const signup = async (req, res) => {
     });
 
     const userId = newUser._id;
+
+    const account = await Account.create({
+      accountHolder: userId,
+      balance: generateRandomAmount(),
+    });
     const token = generateToken(userId);
     res.status(200).json({
       msg: "user added successfully",
       user: newUser,
       token,
+      balance: account.balance,
     });
   } catch (error) {
     console.log("error in signup controller : ", error.message);
@@ -68,6 +75,7 @@ export const login = async (req, res) => {
         msg: "passwords does not match",
       });
     }
+
     const token = generateToken(user._id);
     res.status(200).json({
       msg: "user logged in successfully",
@@ -94,4 +102,9 @@ export const logout = (req, res) => {
       msg: "internal server error",
     });
   }
+};
+
+const generateRandomAmount = () => {
+  const amount = Math.floor(Math.random() * 1000000 + 1);
+  return amount;
 };

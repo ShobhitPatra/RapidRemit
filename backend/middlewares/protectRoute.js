@@ -1,23 +1,24 @@
 import jwt from "jsonwebtoken";
+import { User } from "../models/user.model";
 
-export const protectRoute = (req, res, next) => {
+export const protectRoute = async (req, res, next) => {
   try {
-    const token = req.headers.authorization;
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
+    if (!authHeader) {
       res.status(400).json({
         msg: "token not received",
       });
       return;
     }
 
-    if (!token.startsWith("Bearer")) {
+    if (!authHeader.startsWith("Bearer")) {
       res.status(400).json({
         msg: "token does not starts with Bearer",
       });
       return;
     }
-
+    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify({ token }, process.env.JWT_SECRET_KEY);
 
     if (!decoded) {
@@ -26,7 +27,13 @@ export const protectRoute = (req, res, next) => {
       });
       return;
     }
-
+    const user = await User.findById(decoded._id);
+    if (!user) {
+      res.status(400).json({
+        msg: "user not found",
+      });
+    }
+    req.user = user;
     res.status(200).json({
       msg: "token verified successfully",
     });
