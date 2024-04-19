@@ -1,8 +1,3 @@
-import zod from "zod";
+export const balance = (req, res) => {};
 
-export const signupSchema = zod.object({
-  username: zod.email(),
-  firstname: zod.string(),
-  lastname: zod.string(),
-  password: zod.string().min(8),
-});
+export const transfer = (req, res) => {};
