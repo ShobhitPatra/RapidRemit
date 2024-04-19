@@ -18,10 +18,30 @@ export const getUsers = async (req, res) => {
 
 export const filterUsers = async (req, res) => {
   try {
+    const filter = req.query.filter || " ";
+
+    const filteredUsers = await User.find({
+      $or: [
+        {
+          firstname: {
+            $regex: filter,
+          },
+        },
+        {
+          lastname: {
+            $regex: filter,
+          },
+        },
+      ],
+    });
+
+    req.status(200).json({
+      filteredUsers,
+    });
   } catch (error) {
     console.log("error in filterUsers controller");
     res.status(400).json({
-      msg: "internal server error",
+      msg: "internal server error ",
     });
   }
 };
