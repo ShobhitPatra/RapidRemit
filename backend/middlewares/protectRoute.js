@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
-import { User } from "../models/user.model";
+import jwt, { decode } from "jsonwebtoken";
+import { User } from "../models/user.model.js";
 
 export const protectRoute = async (req, res, next) => {
   try {
@@ -19,24 +19,26 @@ export const protectRoute = async (req, res, next) => {
       return;
     }
     const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify({ token }, process.env.JWT_SECRET_KEY);
-
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    console.log(`decoded : ${decoded}`);
     if (!decoded) {
       res.status(400).json({
         msg: "token verification failed",
       });
       return;
     }
-    const user = await User.findById(decoded._id);
+
+    const user = await User.findById(decoded.userId);
     if (!user) {
       res.status(400).json({
         msg: "user not found",
       });
     }
     req.user = user;
-    res.status(200).json({
-      msg: "token verified successfully",
-    });
+    console.log("token verified successfully");
+    // res.status(200).json({
+    //   msg: "token verified successfully",
+    // });
     next();
   } catch (error) {
     console.log("error in protectRoute middleware : ", error.message);

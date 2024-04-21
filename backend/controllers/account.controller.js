@@ -42,9 +42,9 @@ export const transfer = async (req, res) => {
       });
     }
 
-    const toAccount = await Account.findOne({ accountHolder: to }).session(
-      session
-    );
+    const toAccount = await Account.findOne({
+      accountHolder: toUserId,
+    }).session(session);
 
     if (!fromAccount) {
       await session.abortTransaction();
