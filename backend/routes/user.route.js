@@ -1,6 +1,6 @@
 import express from "express";
 import { protectRoute } from "../middlewares/protectRoute.js";
-import { getUsers } from "../controllers/user.controller.js";
+import { filterUsers, getUsers } from "../controllers/user.controller.js";
 const router = express.Router();
 router.get("/", (req, res) => {
   res.json({
@@ -8,5 +8,6 @@ router.get("/", (req, res) => {
   });
 });
 router.get("/bulk", protectRoute, getUsers);
+router.get("/filter", filterUsers);
 
 export default router;
