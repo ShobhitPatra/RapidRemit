@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 const Signup = () => {
   return (
-    <div className="w-screen h-screen  bg-teal-50 flex justify-center items-center">
-      <div className="flex flex-col justify-center items-center bg-teal-100 border-solid border-black p-16 rounded-md">
+    <div className="h-screen flex justify-center  bg-teal-50 w-full ">
+      <div className="flex flex-col justify-center  bg-teal-100 my-16 mx-2 p-16 rounded-md w-full max-w-md">
         <div className="text-black text-3xl m-2 font-extrabold">Signup</div>
         <div className="text-black text-md m-2">Create your account </div>
         <div className="flex flex-col">
