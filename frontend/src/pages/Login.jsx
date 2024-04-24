@@ -1,37 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const handleSubmit = () => {
+    // console.log(`${username} ${firstname} ${lastname} ${password}`);
+  };
   return (
-    <div className="h-screen bg-teal-50 w-scren flex justify-center items-center">
-      <div className="flex flex-col">
-        <div className="text-black text-3xl m-2 font-extrabold">Login</div>
-        <label className="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className="w-4 h-4 opacity-70"
-          >
-            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-          </svg>
-          <input type="text" className="grow" placeholder="Username" />
-        </label>
+    <div
+      id="bg"
+      className="h-screen w-screen rounded-md flex flex-col min-w-96 mx-auto justify-center items-center bg-teal-50 "
+    >
+      <div
+        id="signup-container"
+        className="flex flex-col   border-black p-16  bg-teal-100 rounded-md"
+      >
+        <div id="title-and-subtitle">
+          <div className="text-black text-3xl m-2 font-extrabold">Signin</div>
+        </div>
+        <div id="input-container" className="flex flex-col">
+          <input
+            type="text"
+            value={username}
+            placeholder="username"
+            className="input input-bordered w-full max-w-xs bg-orange-200 text-orange-900 placeholder-orange-800 m-2  "
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
+          />
 
-        <label className="input input-bordered flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className="w-4 h-4 opacity-70"
-          >
-            <path
-              fillRule="evenodd"
-              d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <input type="password" className="grow" value="password" />
-        </label>
+          <input
+            type="text"
+            value={password}
+            placeholder="password"
+            className="input input-bordered w-full max-w-xs bg-orange-200 text-orange-900 placeholder-orange-800 m-2 "
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+        </div>
+        <Link to="/signup" className="m-2 text-blue-700 hover:text-blue-950">
+          Don't have an account yet ?
+        </Link>
+        <button
+          className="btn btn-xs bg-orange-500 text-white border-none m-2 sm:btn-sm md:btn-md lg:btn-md"
+          onClick={handleSubmit}
+        >
+          Signin
+        </button>
       </div>
     </div>
   );
