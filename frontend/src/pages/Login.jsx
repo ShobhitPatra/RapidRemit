@@ -10,7 +10,7 @@ const Login = () => {
   return (
     <div
       id="bg"
-      className="h-screen w-screen rounded-md flex flex-col min-w-96 mx-auto justify-center items-center bg-teal-50 "
+      className="h-screen  rounded-md flex flex-col min-w-96 mx-auto justify-center items-center bg-teal-50 "
     >
       <div
         id="signup-container"
