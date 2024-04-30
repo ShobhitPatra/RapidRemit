@@ -1,12 +1,24 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import useSignup from "../hooks/useSignup";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [password, setPassword] = useState("");
-  const handleSubmit = () => {
+  const { signup } = useSignup();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await signup(username, firstname, lastname, password);
+      // Optionally, perform any additional actions after successful signup
+      console.log("Signup successful");
+    } catch (error) {
+      console.error("Error during signup:", error.message);
+      // Optionally, display an error message to the user
+    }
+
     // console.log(`${username} ${firstname} ${lastname} ${password}`);
   };
 
