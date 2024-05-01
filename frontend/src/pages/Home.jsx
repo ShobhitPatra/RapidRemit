@@ -1,10 +1,18 @@
 import React from "react";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { Link } from "react-router-dom";
+import { IoLogOutOutline } from "react-icons/io5";
 import Users from "../components/Users";
 import Balance from "../components/Balance";
+import { useAuthContext } from "../context/authContext";
 
 const Home = () => {
+  const { setAuthUser } = useAuthContext();
+  const handleLogout = () => {
+    console.log("clicked");
+    setAuthUser(null);
+    localStorage.removeItem("user-info");
+  };
   return (
     <>
       <div className="flex flex-col h-screen bg-teal-50   ">
@@ -15,8 +23,15 @@ const Home = () => {
           >
             RAPID REMIT
           </div>
-          <div id="greet" className="text-black text-2xl font-semibold p-6">
+          <div
+            id="greet"
+            className="text-black text-2xl font-semibold p-6 flex items-center"
+          >
             Hello User
+            <IoLogOutOutline
+              className="cursor-pointer m-3"
+              onClick={handleLogout}
+            />
           </div>
         </div>
         <div id="balance" className="flex justify-between  bg-teal-100  ">

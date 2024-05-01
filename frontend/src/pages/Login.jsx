@@ -7,10 +7,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const { login } = useLogin();
   const handleSubmit = async (e) => {
+    // e.preventDefault();
     e.preventDefault();
     await login(username, password);
-    // console.log(`${username} ${firstname} ${lastname} ${password}`);
   };
+
   return (
     <div
       id="bg"
@@ -18,7 +19,7 @@ const Login = () => {
     >
       <div
         id="signup-container"
-        className="flex flex-col   border-black p-16  bg-teal-100 rounded-md"
+        className="flex flex-col border-black p-16  bg-teal-100 rounded-md"
       >
         <div id="title-and-subtitle">
           <div className="text-black text-3xl m-2 font-extrabold">Signin</div>
