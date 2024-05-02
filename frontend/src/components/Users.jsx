@@ -1,17 +1,26 @@
 import React from "react";
 import User from "./User";
+import useGetUsers from "../hooks/useGetUsers";
+import { useAuthContext } from "../context/authContext";
 
-const Users = () => {
+export const Users = () => {
+  const { users } = useGetUsers();
+  console.log("user at users : ", users);
+  const { authUser, setAuthUser } = useAuthContext();
+  console.log("authUser :", authUser);
   return (
     <div className="bg-teal-100 flex flex-col overflow-auto">
       <div className="divider bg-slate-200 h-1"></div>
 
-      <User />
-      <User />
-      <User />
-      <User />
-      <User />
-      <User />
+      {users.map((user) => (
+        <>
+          <User
+            firstname={user.firstname}
+            lastname={user.lastname}
+            key={user._id}
+          />
+        </>
+      ))}
     </div>
   );
 };

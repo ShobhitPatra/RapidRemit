@@ -24,6 +24,11 @@ const useLogin = () => {
 
       const userData = res.data;
       localStorage.setItem("user-info", JSON.stringify(userData));
+      const token = JSON.stringify(userData.token);
+      localStorage.setItem("tokenreceived", JSON.stringify(userData.token));
+      localStorage.setItem("token", token.split('"')[1]);
+
+      console.log(JSON.stringify(userData.token));
       setAuthUser(userData);
       setLoading(false);
     } catch (error) {

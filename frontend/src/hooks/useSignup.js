@@ -22,7 +22,9 @@ const useSignup = () => {
         password,
       });
       const userData = res.data;
-      localStorage.setItem("user-info", userData);
+      localStorage.setItem("user-info", JSON.stringify(userData));
+      localStorage.setItem("token", JSON.stringify(userData.token));
+
       setAuthUser(userData);
       setLoading(false);
     } catch (error) {

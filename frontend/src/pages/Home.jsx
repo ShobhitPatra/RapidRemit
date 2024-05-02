@@ -7,7 +7,8 @@ import Balance from "../components/Balance";
 import { useAuthContext } from "../context/authContext";
 
 const Home = () => {
-  const { setAuthUser } = useAuthContext();
+  const { authUser, setAuthUser } = useAuthContext();
+
   const handleLogout = () => {
     console.log("clicked");
     setAuthUser(null);
@@ -27,7 +28,7 @@ const Home = () => {
             id="greet"
             className="text-black text-2xl font-semibold p-6 flex items-center"
           >
-            Hello User
+            Hello {authUser.user.firstname.toUpperCase()}
             <IoLogOutOutline
               className="cursor-pointer m-3"
               onClick={handleLogout}
