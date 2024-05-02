@@ -5,9 +5,8 @@ import { useAuthContext } from "../context/authContext";
 
 export const Users = () => {
   const { users } = useGetUsers();
-  console.log("user at users : ", users);
   const { authUser, setAuthUser } = useAuthContext();
-  console.log("authUser :", authUser);
+
   return (
     <div className="bg-teal-100 flex flex-col overflow-auto">
       <div className="divider bg-slate-200 h-1"></div>

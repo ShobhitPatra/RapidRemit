@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { IoLogOutOutline } from "react-icons/io5";
@@ -8,6 +8,7 @@ import { useAuthContext } from "../context/authContext";
 
 const Home = () => {
   const { authUser, setAuthUser } = useAuthContext();
+  const [filter, setFilter] = useState();
 
   const handleLogout = () => {
     console.log("clicked");
@@ -47,6 +48,10 @@ const Home = () => {
           <input
             type="text"
             placeholder="search user"
+            value={filter}
+            onChange={(e) => {
+              setFilter(e.target.value);
+            }}
             className=" text-xl p-2 m-3 rounded-md bg-white text-slate-700 "
           ></input>
         </div>

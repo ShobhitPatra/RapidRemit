@@ -6,6 +6,7 @@ const useGetUsers = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
+    console.log("useGetUSers");
     const getUsers = async () => {
       try {
         setLoading(true);
@@ -14,12 +15,10 @@ const useGetUsers = () => {
         //     Authorization: `Bearer ${localStorage.getItem("token")}`,
         //   },
         // });
-        // console.log(res.data);
+        // ;
         // // setUsers(res.data.allUsers);
         // const arr = res.data.allUsers;
-        // users = [...arr];
-        // console.log("res.data.allUsers ", res.data.allUsers);
-        // console.log("users:", users);
+
         // setLoading(false);
         const res = await fetch("http://localhost:8000/api/v1/user/bulk", {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
