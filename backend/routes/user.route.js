@@ -8,6 +8,6 @@ router.get("/", (req, res) => {
   });
 });
 router.get("/bulk", protectRoute, getUsers);
-router.get("/filter", filterUsers);
+router.get("/filter", protectRoute, filterUsers);
 
 export default router;

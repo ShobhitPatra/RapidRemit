@@ -1,14 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HiCurrencyRupee } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import { IoLogOutOutline } from "react-icons/io5";
 import Users from "../components/Users";
 import Balance from "../components/Balance";
 import { useAuthContext } from "../context/authContext";
+import useGetFilteredUsers from "../hooks/useGetFilteredUsers";
 
 const Home = () => {
   const { authUser, setAuthUser } = useAuthContext();
   const [filter, setFilter] = useState();
+  const { fetchFilteredUsers } = useGetFilteredUsers();
+
+  useEffect(() => {
+    async function call() {
+      await fetchFilteredUsers(filter);
+    }
+    call();
+  }, [filter, setFilter]);
 
   const handleLogout = () => {
     console.log("clicked");

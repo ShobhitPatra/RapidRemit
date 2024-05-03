@@ -33,11 +33,9 @@ export const filterUsers = async (req, res) => {
       ],
     });
 
-    req.status(200).json({
-      filteredUsers,
-    });
+    res.status(200).json(filteredUsers);
   } catch (error) {
-    console.log("error in filterUsers controller");
+    console.log("error in filterUsers controller :", error.message);
     res.status(400).json({
       msg: "internal server error ",
     });
